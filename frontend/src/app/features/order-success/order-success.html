@@ -1,0 +1,68 @@
+<app-navbar></app-navbar>
+
+<main class="bg-cream min-h-screen py-16">
+  <div class="max-w-2xl mx-auto px-4 text-center">
+    <!-- Success Icon -->
+    <div class="w-24 h-24 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center">
+      <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+    </div>
+
+    <h1 class="font-montserrat text-3xl font-bold text-charcoal mb-2">Order Confirmed!</h1>
+    <p class="font-poppins text-gray-600 mb-6">Thank you for shopping with Mini-Mart</p>
+
+    <!-- Order Details -->
+    <div class="bg-white rounded-xl p-6 shadow-sm text-left mb-6">
+      <div class="flex justify-between items-center pb-3 border-b">
+        <span class="font-poppins text-sm text-gray-500">Order ID</span>
+        <span class="font-montserrat font-semibold text-teal-700">{{ order?.orderId }}</span>
+      </div>
+      <div class="flex justify-between items-center py-3 border-b">
+        <span class="font-poppins text-sm text-gray-500">Total Amount</span>
+        <span class="font-montserrat font-bold text-xl text-coral">{{ order?.total }} ETB</span>
+      </div>
+      <div class="flex justify-between items-center py-3 border-b">
+        <span class="font-poppins text-sm text-gray-500">Payment Method</span>
+        <span class="font-poppins capitalize">{{ order?.paymentMethod }}</span>
+      </div>
+      <div class="flex justify-between items-center py-3 border-b">
+        <span class="font-poppins text-sm text-gray-500">Delivery Date</span>
+        <span class="font-poppins">{{ order?.deliveryDate | date }}</span>
+      </div>
+      <div class="flex justify-between items-center pt-3">
+        <span class="font-poppins text-sm text-gray-500">Delivery Address</span>
+        <span class="font-poppins text-sm text-right max-w-[200px]">{{ order?.deliveryAddress }}</span>
+      </div>
+    </div>
+
+    <!-- Payment Instructions -->
+    <div *ngIf="order?.paymentMethod !== 'chapa'" class="bg-coral/10 rounded-xl p-4 text-left mb-6">
+      <h3 class="font-montserrat font-semibold text-charcoal mb-2 flex items-center gap-2">
+        <span>📱</span> Payment Instructions
+      </h3>
+      <p class="font-poppins text-sm text-gray-700">
+        Please send <strong class="text-coral">{{ order?.total }} ETB</strong> to:
+      </p>
+      <div class="mt-2 p-2 bg-white rounded-lg">
+        <p class="font-poppins text-sm"><strong>Telegram:</strong> @minimart_payments</p>
+        <p class="font-poppins text-sm"><strong>Phone:</strong> +251 900 123 456</p>
+      </div>
+      <p class="font-poppins text-xs text-gray-500 mt-2">
+        After payment, upload your receipt in the orders section.
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-wrap gap-4 justify-center">
+      <button routerLink="/products" class="bg-teal-700 text-white px-6 py-2 rounded-full font-medium hover:bg-teal-800 transition">
+        Continue Shopping
+      </button>
+      <button routerLink="/" class="border border-coral text-coral px-6 py-2 rounded-full font-medium hover:bg-coral hover:text-white transition">
+        Back to Home
+      </button>
+    </div>
+  </div>
+</main>
+
+<app-footer></app-footer>

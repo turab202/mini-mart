@@ -1,0 +1,56 @@
+<app-navbar></app-navbar>
+
+<main class="bg-cream min-h-screen py-12">
+  <div class="max-w-7xl mx-auto px-4">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="font-montserrat text-4xl font-bold text-charcoal mb-3">Our Products</h1>
+      <p class="font-poppins text-gray-500">Quality products at amazing prices</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="flex flex-wrap gap-4 justify-center mb-8">
+      <button *ngFor="let cat of categories" 
+              (click)="selectCategory(cat)"
+              class="px-4 py-2 rounded-full transition"
+              [class.bg-coral]="selectedCategory === cat"
+              [class.text-white]="selectedCategory === cat"
+              [class.bg-gray-200]="selectedCategory !== cat"
+              [class.text-charcoal]="selectedCategory !== cat">
+        {{ cat }}
+      </button>
+    </div>
+
+    <!-- Products Grid -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div *ngFor="let product of products" 
+           class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer"
+           (click)="viewProduct(product._id)">
+        <img [src]="product.images[0]" class="w-full h-48 object-cover" alt="{{ product.name }}">
+        <div class="p-4">
+          <h3 class="font-montserrat font-semibold text-charcoal">{{ product.name }}</h3>
+          <p class="font-poppins text-sm text-gray-500 mt-1">{{ product.category }}</p>
+          <div class="flex items-center justify-between mt-3">
+            <span class="font-poppins font-bold text-teal-700">{{ product.price }} ETB</span>
+            <button (click)="$event.stopPropagation(); addToCart(product)" 
+                    class="bg-coral text-white px-3 py-1 rounded-full text-sm hover:bg-opacity-90">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-coral border-t-transparent"></div>
+    </div>
+
+    <!-- Empty -->
+    <div *ngIf="!isLoading && products.length === 0" class="text-center py-12">
+      <p class="text-gray-500">No products found</p>
+    </div>
+  </div>
+</main>
+
+<app-footer></app-footer>

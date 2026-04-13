@@ -1,0 +1,105 @@
+<nav class="bg-deep-blue text-white shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex justify-between items-center h-16">
+
+      <!-- Logo -->
+      <a routerLink="/" class="flex items-center gap-2 group cursor-pointer">
+        <img src="/assets/logo.png" class="h-10 w-10 object-contain" alt="Mini Mart">
+        <span class="font-montserrat font-bold text-xl">
+          Mini<span class="text-orange">Mart</span>
+        </span>
+      </a>
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex items-center gap-8">
+        <a routerLink="/" routerLinkActive="text-orange" [routerLinkActiveOptions]="{exact: true}" 
+           class="font-poppins hover:text-orange transition">Home</a>
+        <a routerLink="/products" routerLinkActive="text-orange" 
+           class="font-poppins hover:text-orange transition">Products</a>
+        <a routerLink="/about" routerLinkActive="text-orange" 
+           class="font-poppins hover:text-orange transition">About</a>
+        <a routerLink="/contact" routerLinkActive="text-orange" 
+           class="font-poppins hover:text-orange transition">Contact</a>
+      </div>
+
+      <!-- Right Section -->
+      <div class="flex items-center gap-4">
+
+        <!-- Search Button -->
+        <button class="hidden md:block p-2 hover:opacity-80 rounded-full transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </button>
+
+        <!-- Cart -->
+        <button (click)="goToCart()" class="relative p-2 hover:opacity-80 rounded-full transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6M17 13l1.5 6M9 21h6M12 18v3"></path>
+          </svg>
+          <span *ngIf="cartCount > 0" 
+                class="absolute -top-1 -right-1 bg-orange text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            {{ cartCount }}
+          </span>
+        </button>
+
+        <!-- Admin -->
+        <div class="relative hidden md:block">
+          <button (click)="isAdminMenuOpen = !isAdminMenuOpen" 
+                  class="flex items-center gap-2 px-3 py-1.5 rounded-full transition hover:opacity-80"
+                  style="background-color:#2C3E50;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            <span class="text-sm">Admin</span>
+          </button>
+          
+          <div *ngIf="isAdminMenuOpen" 
+               class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50"
+               (mouseleave)="isAdminMenuOpen = false">
+            <a routerLink="/admin" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
+            <a routerLink="/admin/products" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Products</a>
+            <a routerLink="/admin/orders" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Orders</a>
+            <hr class="my-1">
+            <button class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+              Logout
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button (click)="toggleMenu()" class="md:hidden p-2 hover:opacity-80 rounded-full transition">
+          <svg *ngIf="!isMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <svg *ngIf="isMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div *ngIf="isMenuOpen" class="md:hidden py-4 border-t border-white/20">
+      <div class="flex flex-col gap-3">
+        <a routerLink="/" (click)="closeMenu()" class="font-poppins hover:text-orange transition px-2 py-1">Home</a>
+        <a routerLink="/products" (click)="closeMenu()" class="font-poppins hover:text-orange transition px-2 py-1">Products</a>
+        <a routerLink="/about" (click)="closeMenu()" class="font-poppins hover:text-orange transition px-2 py-1">About</a>
+        <a routerLink="/contact" (click)="closeMenu()" class="font-poppins hover:text-orange transition px-2 py-1">Contact</a>
+        <hr class="border-white/20">
+        <a routerLink="/admin" (click)="closeMenu()" class="font-poppins hover:text-orange transition px-2 py-1">Admin Dashboard</a>
+        <a routerLink="/admin/products" (click)="closeMenu()" class="font-poppins hover:text-orange transition px-2 py-1">Manage Products</a>
+        <a routerLink="/admin/orders" (click)="closeMenu()" class="font-poppins hover:text-orange transition px-2 py-1">Manage Orders</a>
+        <button class="text-left font-poppins text-red-400 hover:text-red-300 transition px-2 py-1">Logout</button>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<!-- Overlay -->
+<div *ngIf="isMenuOpen" class="fixed inset-0 bg-black/50 z-40 md:hidden" (click)="closeMenu()"></div>

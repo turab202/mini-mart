@@ -1,0 +1,174 @@
+<div class="p-6">
+  <div class="mb-6">
+    <h1 class="font-montserrat text-2xl font-bold text-charcoal">Order Management</h1>
+    <p class="font-poppins text-sm text-gray-500">Track and manage customer orders</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+    <div class="bg-white rounded-xl p-4 shadow-sm">
+      <p class="font-poppins text-xs text-gray-500">Total Orders</p>
+      <p class="font-montserrat text-2xl font-bold text-teal-700">{{ orders.length }}</p>
+    </div>
+    <div class="bg-white rounded-xl p-4 shadow-sm">
+      <p class="font-poppins text-xs text-gray-500">Pending</p>
+      <p class="font-montserrat text-2xl font-bold text-yellow-600">{{ getStatusCount('pending') }}</p>
+    </div>
+    <div class="bg-white rounded-xl p-4 shadow-sm">
+      <p class="font-poppins text-xs text-gray-500">Confirmed</p>
+      <p class="font-montserrat text-2xl font-bold text-blue-600">{{ getStatusCount('confirmed') }}</p>
+    </div>
+    <div class="bg-white rounded-xl p-4 shadow-sm">
+      <p class="font-poppins text-xs text-gray-500">Shipped</p>
+      <p class="font-montserrat text-2xl font-bold text-purple-600">{{ getStatusCount('shipped') }}</p>
+    </div>
+    <div class="bg-white rounded-xl p-4 shadow-sm">
+      <p class="font-poppins text-xs text-gray-500">Delivered</p>
+      <p class="font-montserrat text-2xl font-bold text-green-600">{{ getStatusCount('delivered') }}</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex flex-col sm:flex-row gap-4 mb-6">
+    <div class="relative flex-1">
+      <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="filterOrders()" placeholder="Search by Order ID, Customer, or Phone..." class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg focus:border-coral focus:outline-none">
+    </div>
+    <select [(ngModel)]="statusFilter" (ngModelChange)="filterOrders()" class="px-4 py-2 border border-gray-200 rounded-lg focus:border-coral focus:outline-none">
+      <option value="">All Status</option>
+      <option value="pending">Pending</option>
+      <option value="confirmed">Confirmed</option>
+      <option value="processing">Processing</option>
+      <option value="shipped">Shipped</option>
+      <option value="delivered">Delivered</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+  </div>
+
+  <!-- Orders Table -->
+  <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-teal-700 text-white">
+          <tr>
+            <th class="text-left px-4 py-3 font-poppins text-sm">Order ID</th>
+            <th class="text-left px-4 py-3 font-poppins text-sm">Customer</th>
+            <th class="text-left px-4 py-3 font-poppins text-sm">Phone</th>
+            <th class="text-left px-4 py-3 font-poppins text-sm">Items</th>
+            <th class="text-left px-4 py-3 font-poppins text-sm">Total</th>
+            <th class="text-left px-4 py-3 font-poppins text-sm">Date</th>
+            <th class="text-left px-4 py-3 font-poppins text-sm">Status</th>
+            <th class="text-left px-4 py-3 font-poppins text-sm">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of filteredOrders" class="border-t border-gray-100 hover:bg-gray-50">
+            <td class="px-4 py-3">
+              <span class="font-montserrat font-semibold text-sm text-teal-700">{{ order.orderId }}</span>
+            </td>
+            <td class="px-4 py-3 font-poppins text-sm text-charcoal">{{ order.customerName }}</td>
+            <td class="px-4 py-3 font-poppins text-sm text-gray-500">{{ order.customerPhone }}</td>
+            <td class="px-4 py-3 font-poppins text-sm">{{ order.items?.length || 0 }}</td>
+            <td class="px-4 py-3 font-poppins text-sm font-medium text-coral">{{ order.total }} ETB</td>
+            <td class="px-4 py-3 font-poppins text-sm text-gray-500">{{ order.createdAt | date:'short' }}</td>
+            <td class="px-4 py-3">
+              <select [(ngModel)]="order.orderStatus" (change)="updateStatus(order)" class="px-2 py-1 rounded-full text-xs font-medium border-0" [class.bg-yellow-100]="order.orderStatus === 'pending'" [class.text-yellow-700]="order.orderStatus === 'pending'" [class.bg-blue-100]="order.orderStatus === 'confirmed'" [class.text-blue-700]="order.orderStatus === 'confirmed'" [class.bg-purple-100]="order.orderStatus === 'shipped'" [class.text-purple-700]="order.orderStatus === 'shipped'" [class.bg-green-100]="order.orderStatus === 'delivered'" [class.text-green-700]="order.orderStatus === 'delivered'">
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </td>
+            <td class="px-4 py-3">
+              <button (click)="viewOrderDetails(order)" class="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Order Details Modal -->
+<div *ngIf="selectedOrder" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" (click)="closeDetails()">
+  <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="font-montserrat text-xl font-bold text-charcoal">Order Details</h2>
+        <button (click)="closeDetails()" class="text-gray-400 hover:text-gray-600">✕</button>
+      </div>
+      
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-4 pb-4 border-b">
+          <div>
+            <p class="font-poppins text-xs text-gray-500">Order ID</p>
+            <p class="font-montserrat font-semibold text-teal-700">{{ selectedOrder.orderId }}</p>
+          </div>
+          <div>
+            <p class="font-poppins text-xs text-gray-500">Status</p>
+            <span class="px-2 py-1 rounded-full text-xs font-medium" [class.bg-yellow-100]="selectedOrder.orderStatus === 'pending'" [class.text-yellow-700]="selectedOrder.orderStatus === 'pending'">{{ selectedOrder.orderStatus | uppercase }}</span>
+          </div>
+        </div>
+
+        <div>
+          <p class="font-poppins text-sm font-semibold text-charcoal mb-2">Customer Information</p>
+          <div class="bg-gray-50 rounded-lg p-3 space-y-1">
+            <p><span class="font-poppins text-sm text-gray-500">Name:</span> {{ selectedOrder.customerName }}</p>
+            <p><span class="font-poppins text-sm text-gray-500">Phone:</span> {{ selectedOrder.customerPhone }}</p>
+            <p><span class="font-poppins text-sm text-gray-500">Email:</span> {{ selectedOrder.customerEmail || 'N/A' }}</p>
+            <p><span class="font-poppins text-sm text-gray-500">Address:</span> {{ selectedOrder.deliveryAddress }}</p>
+          </div>
+        </div>
+
+        <div>
+          <p class="font-poppins text-sm font-semibold text-charcoal mb-2">Order Items</p>
+          <div class="space-y-2 max-h-64 overflow-y-auto">
+            <div *ngFor="let item of selectedOrder.items" class="flex gap-3 p-2 bg-gray-50 rounded-lg">
+              <img [src]="item.image" class="w-12 h-12 rounded-lg object-cover">
+              <div class="flex-1">
+                <p class="font-poppins text-sm font-medium">{{ item.name }}</p>
+                <p class="font-poppins text-xs text-gray-500">Qty: {{ item.quantity }} × {{ item.price }} ETB</p>
+              </div>
+              <span class="font-poppins text-sm font-medium text-teal-700">{{ item.price * item.quantity }} ETB</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t pt-4">
+          <div class="flex justify-between">
+            <span>Subtotal</span>
+            <span>{{ selectedOrder.subtotal }} ETB</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Delivery Fee</span>
+            <span>{{ selectedOrder.deliveryFee }} ETB</span>
+          </div>
+          <div class="flex justify-between font-bold text-lg mt-2 pt-2 border-t">
+            <span>Total</span>
+            <span class="text-coral">{{ selectedOrder.total }} ETB</span>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-3">
+          <p class="font-poppins text-sm font-semibold">Payment Information</p>
+          <p class="font-poppins text-sm">Method: <span class="capitalize">{{ selectedOrder.paymentMethod }}</span></p>
+          <p class="font-poppins text-sm">Status: <span [class.text-green-600]="selectedOrder.paymentStatus === 'paid'">{{ selectedOrder.paymentStatus | uppercase }}</span></p>
+          <p class="font-poppins text-sm">Delivery Date: {{ selectedOrder.deliveryDate | date }}</p>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-6">
+        <button (click)="closeDetails()" class="flex-1 bg-coral text-white py-2 rounded-lg hover:bg-opacity-90">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
