@@ -31,12 +31,12 @@ export class ProductDetailComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.api.getProduct(id).subscribe({
-        next: (product) => {
+        next: (product: any) => {
           this.product = product;
           this.selectedImage = product.images?.[0] || '/assets/placeholder.jpg';
           this.isLoading = false;
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Failed to load product:', err);
           this.isLoading = false;
         }

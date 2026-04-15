@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -93,7 +94,7 @@ export class AdminLayoutComponent implements OnInit {
   currentSubtitle = 'Overview of your store';
   searchTerm = '';
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private auth: AuthService) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.updateTitle(event.url);
@@ -134,7 +135,7 @@ export class AdminLayoutComponent implements OnInit {
   }
 
   logout() {
-    localStorage.removeItem('token');
+    this.auth.logout();
     this.router.navigate(['/login']);
   }
 }

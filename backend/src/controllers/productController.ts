@@ -3,11 +3,12 @@ import Product from '../models/Product';
 
 export const getProducts = async (req: Request, res: Response) => {
   try {
-    const { category, search, page = 1, limit = 20 } = req.query;
-    const query: any = { isActive: true };
+    const { category, search, page = 1, limit = 20, admin, isFeatured } = req.query;
+    const query: any = admin === 'true' ? {} : { isActive: true };
     
     if (category) query.category = category;
     if (search) query.name = { $regex: search, $options: 'i' };
+    if (isFeatured === 'true') query.isFeatured = true;
     
     const products = await Product.find(query)
       .skip((Number(page) - 1) * Number(limit))

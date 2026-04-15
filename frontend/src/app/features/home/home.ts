@@ -59,7 +59,7 @@ import { FooterComponent } from '../../shared/footer/footer';
             <div *ngFor="let product of featuredProducts" 
                  (click)="viewProduct(product._id)"
                  class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer">
-              <img [src]="product.images[0]" class="w-full h-56 object-cover" alt="{{ product.name }}">
+              <img [src]="product.images?.[0] || 'https://placehold.co/400x300?text=No+Image'" class="w-full h-56 object-cover" alt="{{ product.name }}">
               <div class="p-4">
                 <h3 class="font-montserrat font-semibold text-dark-navy">{{ product.name }}</h3>
                 <p class="font-poppins text-sm text-gray-500 mt-1">{{ product.category }}</p>
@@ -112,7 +112,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadFeaturedProducts() {
-    this.api.getProducts({ isFeatured: true, limit: 4 }).subscribe({
+    this.api.getProducts({ isFeatured: 'true', limit: '4' }).subscribe({
       next: (res) => {
         this.featuredProducts = res.products || [];
       },

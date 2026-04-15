@@ -29,16 +29,30 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
+    console.log('Login attempt - Body:', req.body); // ADD THIS
+    console.log('Headers:', req.headers['content-type']); // ADD THIS
+    
     const { email, password } = req.body;
+    
+    if (!email || !password) {
+      console.log('Missing email or password'); // ADD THIS
+      return res.status(400).json({ message: 'Email and password required' });
+    }
+    
     const user = await User.findOne({ email });
+    console.log('User found:', user ? 'Yes' : 'No'); // ADD THIS
+    
     if (!user) return res.status(400).json({ message: 'Invalid credentials' });
     
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Password match:', isMatch); // ADD THIS
+    
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
     
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!);
     res.json({ token, user: { id: user._id, name: user.name, email, role: user.role } });
   } catch (error) {
+    console.error('Login error:', error); // ADD THIS
     res.status(500).json({ message: 'Server error' });
   }
 };

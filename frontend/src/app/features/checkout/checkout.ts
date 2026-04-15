@@ -23,6 +23,7 @@ export class CheckoutComponent implements OnInit {
   total = 0;
   cartCount = 0;
   isProcessing = false;
+  orderError = '';
   minDate = new Date().toISOString().split('T')[0];
 
   paymentMethods = [
@@ -90,7 +91,7 @@ export class CheckoutComponent implements OnInit {
       error: (error) => {
         console.error('Order failed:', error);
         this.isProcessing = false;
-        alert('Order failed. Please check your connection and try again.');
+        this.orderError = 'Order failed. Please check your connection and try again.';
       }
     });
   }

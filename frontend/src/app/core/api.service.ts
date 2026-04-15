@@ -9,7 +9,7 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   // Products
-  getProducts(params?: any): Observable<any> {
+  getProducts(params: Record<string, string> = {}): Observable<any> {
     return this.http.get(`${this.baseUrl}/products`, { params });
   }
 
@@ -18,7 +18,6 @@ export class ApiService {
   }
 
   createProduct(product: any): Observable<any> {
-    console.log('API call to create product:', product);
     return this.http.post(`${this.baseUrl}/products`, product);
   }
 
@@ -30,13 +29,18 @@ export class ApiService {
     return this.http.delete(`${this.baseUrl}/products/${id}`);
   }
 
-  // Orders
-  createOrder(order: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/orders`, order);
+  // Image Upload
+  uploadImage(formData: FormData): Observable<any> {
+    return this.http.post(`${this.baseUrl}/upload`, formData);
   }
 
-  getOrders(params?: any): Observable<any> {
-    return this.http.get(`${this.baseUrl}/orders`, { params });
+  // Orders
+  getOrders(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/orders`);
+  }
+
+  createOrder(order: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/orders`, order);
   }
 
   updateOrderStatus(id: string, status: string): Observable<any> {

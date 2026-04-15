@@ -11,6 +11,8 @@ import { AdminLayoutComponent } from './admin/admin-layout/admin-layout.componen
 import { AdminDashboardComponent } from './admin/dashboard/dashboard';
 import { AdminProductsComponent } from './admin/products/products';
 import { AdminOrdersComponent } from './admin/orders/orders';
+import { LoginComponent } from './features/login/login.component';
+import { AdminGuard } from './core/admin.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -21,9 +23,11 @@ export const routes: Routes = [
   { path: 'order-success', component: OrderSuccessComponent },
   { path: 'about', component: AboutComponent },
   { path: 'contact', component: ContactComponent },
+  { path: 'login', component: LoginComponent },
   {
     path: 'admin',
     component: AdminLayoutComponent,
+    canActivate: [AdminGuard],
     children: [
       { path: '', component: AdminDashboardComponent },
       { path: 'products', component: AdminProductsComponent },
