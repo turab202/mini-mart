@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../../core/cart.service';
@@ -7,6 +7,7 @@ import { AuthService } from '../../core/auth.service';
 @Component({
   selector: 'app-navbar',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterModule],
   templateUrl: './navbar.html'
 })
@@ -18,12 +19,14 @@ export class NavbarComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private router: Router,
-    private auth: AuthService
+    private auth: AuthService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.cartService.cartItems$.subscribe(() => {
       this.cartCount = this.cartService.getCartCount();
+      this.cdr.markForCheck();
     });
   }
 

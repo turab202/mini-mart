@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../core/api.service';
@@ -6,6 +6,7 @@ import { ApiService } from '../../core/api.service';
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterModule],
   template: `
     <div>
@@ -133,28 +134,26 @@ export class AdminDashboardComponent implements OnInit {
   
   recentOrders: any[] = [];
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.loadData();
   }
 
   loadData() {
-    // Load products
-    this.api.getProducts().subscribe(res => {
+    this.api.getProducts({ admin: 'true' }).subscribe(res => {
       this.stats.totalProducts = res.products?.length || 0;
       this.stats.activeProducts = res.products?.filter((p: any) => p.isActive).length || 0;
+      this.cdr.markForCheck();
     });
 
-    // Load orders
     this.api.getOrders().subscribe(res => {
       this.stats.totalOrders = res.orders?.length || 0;
       this.stats.totalRevenue = res.orders?.reduce((sum: number, order: any) => sum + order.total, 0) || 0;
       this.recentOrders = res.orders?.slice(0, 5) || [];
-      
-      // Calculate total customers (unique phone numbers)
       const uniqueCustomers = new Set(res.orders?.map((o: any) => o.customerPhone) || []);
       this.stats.totalCustomers = uniqueCustomers.size;
+      this.cdr.markForCheck();
     });
   }
 }

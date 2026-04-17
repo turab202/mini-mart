@@ -1,16 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { CartService } from '../../core/cart.service';
 import { NavbarComponent } from '../../shared/navbar/navbar';
 import { FooterComponent } from '../../shared/footer/footer';
-import { timeout, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
 
 @Component({
   selector: 'app-products',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NavbarComponent, FooterComponent],
   templateUrl: './products.html'
 })
@@ -25,7 +24,8 @@ export class ProductsComponent implements OnInit {
     private api: ApiService,
     private cartService: CartService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -38,19 +38,21 @@ export class ProductsComponent implements OnInit {
   loadProducts() {
     this.isLoading = true;
     this.hasError = false;
+    this.cdr.markForCheck();
     const params: Record<string, string> = {};
     if (this.selectedCategory !== 'All') params['category'] = this.selectedCategory;
 
-    this.api.getProducts(params).pipe(
-      timeout(8000),
-      catchError(() => of({ products: null, error: true }))
-    ).subscribe(res => {
-      if (res.error || res.products === null) {
-        this.hasError = true;
-      } else {
+    this.api.getProducts(params).subscribe({
+      next: (res) => {
         this.products = res.products ?? [];
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.isLoading = false;
+        this.hasError = true;
+        this.cdr.markForCheck();
       }
-      this.isLoading = false;
     });
   }
 
@@ -59,9 +61,7 @@ export class ProductsComponent implements OnInit {
     this.loadProducts();
   }
 
-  viewProduct(id: string) {
-    this.router.navigate(['/product', id]);
-  }
+  viewProduct(id: string) { this.router.navigate(['/product', id]); }
 
   addToCart(product: any) {
     this.cartService.addToCart({

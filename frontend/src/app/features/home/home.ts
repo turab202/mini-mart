@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../core/api.service';
@@ -9,6 +9,7 @@ import { FooterComponent } from '../../shared/footer/footer';
 @Component({
   selector: 'app-home',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterModule, NavbarComponent, FooterComponent],
   template: `
     <app-navbar></app-navbar>
@@ -104,7 +105,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private api: ApiService,
     private cartService: CartService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -115,16 +117,11 @@ export class HomeComponent implements OnInit {
     this.api.getProducts({ isFeatured: 'true', limit: '4' }).subscribe({
       next: (res) => {
         this.featuredProducts = res.products || [];
+        this.cdr.markForCheck();
       },
-      error: (err) => {
-        console.error('Failed to load products', err);
-        // Fallback demo products
-        this.featuredProducts = [
-          { _id: '1', name: 'Wireless Headphones', price: 899, category: 'Electronics', images: ['/assets/headphones.jpg'] },
-          { _id: '2', name: 'Smart Watch', price: 1299, category: 'Electronics', images: ['/assets/watch.jpg'] },
-          { _id: '3', name: 'Running Shoes', price: 1599, category: 'Clothing', images: ['/assets/shoes.jpg'] },
-          { _id: '4', name: 'Backpack', price: 799, category: 'Fashion', images: ['/assets/bag.jpg'] }
-        ];
+      error: () => {
+        this.featuredProducts = [];
+        this.cdr.markForCheck();
       }
     });
   }

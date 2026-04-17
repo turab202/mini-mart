@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { FooterComponent } from '../../shared/footer/footer';
 @Component({
   selector: 'app-checkout',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReactiveFormsModule, NavbarComponent, FooterComponent],
   templateUrl: './checkout.html'
 })
@@ -36,7 +37,8 @@ export class CheckoutComponent implements OnInit {
     private fb: FormBuilder,
     private cartService: CartService,
     private api: ApiService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.checkoutForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(2)]],
@@ -54,6 +56,7 @@ export class CheckoutComponent implements OnInit {
       this.cartCount = this.cartService.getCartCount();
       this.subtotal = this.cartService.getSubtotal();
       this.total = this.subtotal + this.deliveryFee;
+      this.cdr.markForCheck();
     });
   }
 
@@ -87,11 +90,13 @@ export class CheckoutComponent implements OnInit {
       next: (order) => {
         this.cartService.clearCart();
         this.router.navigate(['/order-success'], { state: { order } });
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Order failed:', error);
         this.isProcessing = false;
         this.orderError = 'Order failed. Please check your connection and try again.';
+        this.cdr.markForCheck();
       }
     });
   }
