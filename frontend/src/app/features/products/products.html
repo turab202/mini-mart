@@ -1,64 +1,93 @@
 <app-navbar></app-navbar>
 
-<main class="bg-cream min-h-screen py-12">
-  <div class="max-w-7xl mx-auto px-4">
-    <!-- Header -->
-    <div class="text-center mb-12">
-      <h1 class="font-montserrat text-4xl font-bold text-charcoal mb-3">Our Products</h1>
-      <p class="font-poppins text-gray-500">Quality products at amazing prices</p>
-    </div>
+<main class="bg-gray-light min-h-screen">
 
-    <!-- Filters -->
-    <div class="flex flex-wrap gap-4 justify-center mb-8">
-      <button *ngFor="let cat of categories" 
+  <!-- Page Hero Bar -->
+  <div class="bg-deep-blue text-white py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+      <h1 class="font-montserrat text-4xl font-bold mb-2">Our Products</h1>
+      <p class="font-poppins text-gray-300">Discover quality products at amazing prices</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+
+    <!-- Category Filters -->
+    <div class="flex flex-wrap gap-3 justify-center mb-8">
+      <button *ngFor="let cat of categories"
               (click)="selectCategory(cat)"
-              class="px-4 py-2 rounded-full transition"
-              [class.bg-coral]="selectedCategory === cat"
+              class="px-5 py-2 rounded-full font-poppins text-sm font-medium transition"
+              [class.bg-orange]="selectedCategory === cat"
               [class.text-white]="selectedCategory === cat"
-              [class.bg-gray-200]="selectedCategory !== cat"
-              [class.text-charcoal]="selectedCategory !== cat">
+              [class.shadow-md]="selectedCategory === cat"
+              [class.bg-white]="selectedCategory !== cat"
+              [class.text-dark-navy]="selectedCategory !== cat"
+              [class.shadow-sm]="selectedCategory !== cat">
         {{ cat }}
       </button>
     </div>
 
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-24">
+      <div class="w-14 h-14 border-4 border-orange border-t-transparent rounded-full animate-spin mb-4"></div>
+      <p class="font-poppins text-gray-500">Loading products...</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="!isLoading && hasError" class="text-center py-20">
+      <div class="w-20 h-20 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
+        <svg class="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <h2 class="font-montserrat text-xl font-bold text-dark-navy mb-2">Failed to Load Products</h2>
+      <p class="font-poppins text-gray-500 mb-6">Please check your connection and try again.</p>
+      <button (click)="loadProducts()" class="bg-orange text-white px-8 py-3 rounded-full font-poppins font-semibold hover:bg-opacity-90 transition">Retry</button>
+    </div>
+
     <!-- Products Grid -->
-    <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div *ngFor="let product of products" 
-           class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer"
-           (click)="viewProduct(product._id)">
-        <img [src]="product.images?.[0] || 'https://placehold.co/400x300?text=No+Image'" class="w-full h-48 object-cover" alt="{{ product.name }}">
+    <div *ngIf="!isLoading && !hasError && products.length > 0"
+         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div *ngFor="let product of products"
+           (click)="viewProduct(product._id)"
+           class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group">
+        <div class="relative overflow-hidden h-52">
+          <img [src]="product.images?.[0] || 'https://placehold.co/400x300?text=No+Image'"
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+               alt="{{ product.name }}">
+          <div *ngIf="product.oldPrice" class="absolute top-3 left-3 bg-red-500 text-white text-xs font-poppins font-bold px-2 py-1 rounded-full">
+            {{ ((product.oldPrice - product.price) / product.oldPrice * 100) | number:'1.0-0' }}% OFF
+          </div>
+        </div>
         <div class="p-4">
-          <h3 class="font-montserrat font-semibold text-charcoal">{{ product.name }}</h3>
-          <p class="font-poppins text-sm text-gray-500 mt-1">{{ product.category }}</p>
-          <div class="flex items-center justify-between mt-3">
-            <span class="font-poppins font-bold text-teal-700">{{ product.price }} ETB</span>
-            <button (click)="$event.stopPropagation(); addToCart(product)" 
-                    class="bg-coral text-white px-3 py-1 rounded-full text-sm hover:bg-opacity-90">
-              Add to Cart
+          <span class="text-xs font-poppins text-orange font-medium">{{ product.category }}</span>
+          <h3 class="font-montserrat font-semibold text-dark-navy mt-1 mb-1 line-clamp-1">{{ product.name }}</h3>
+          <p class="font-poppins text-xs text-gray-400 mb-3 line-clamp-2">{{ product.description }}</p>
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="font-montserrat font-bold text-orange text-lg">{{ product.price }} ETB</span>
+              <span *ngIf="product.oldPrice" class="font-poppins text-xs text-gray-400 line-through ml-1">{{ product.oldPrice }}</span>
+            </div>
+            <button (click)="$event.stopPropagation(); addToCart(product)"
+                    class="bg-deep-blue text-white px-3 py-1.5 rounded-full text-xs font-poppins font-medium hover:bg-orange transition">
+              + Cart
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Loading -->
-    <div *ngIf="isLoading" class="text-center py-12">
-      <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-coral border-t-transparent"></div>
-      <p class="font-poppins text-gray-500 mt-4">Loading products...</p>
-    </div>
-
-    <!-- Error -->
-    <div *ngIf="!isLoading && hasError" class="text-center py-12">
-      <p class="text-red-500 font-poppins mb-4">Failed to load products. Is the backend running?</p>
-      <button (click)="loadProducts()" class="bg-coral text-white px-6 py-2 rounded-full font-poppins hover:bg-opacity-90">
-        Retry
-      </button>
-    </div>
-
     <!-- Empty -->
-    <div *ngIf="!isLoading && !hasError && products.length === 0" class="text-center py-12">
-      <p class="text-gray-500">No products found</p>
+    <div *ngIf="!isLoading && !hasError && products.length === 0" class="text-center py-20">
+      <div class="w-20 h-20 mx-auto bg-white rounded-full flex items-center justify-center shadow mb-4">
+        <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+        </svg>
+      </div>
+      <h2 class="font-montserrat text-xl font-bold text-dark-navy mb-2">No Products Found</h2>
+      <p class="font-poppins text-gray-500">Try selecting a different category.</p>
     </div>
+
   </div>
 </main>
 

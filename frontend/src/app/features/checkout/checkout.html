@@ -1,135 +1,140 @@
 <app-navbar></app-navbar>
 
-<main class="bg-cream min-h-screen py-16">
-  <div class="max-w-6xl mx-auto px-4">
-    <h1 class="font-montserrat text-3xl font-bold text-charcoal mb-8">Checkout</h1>
+<main class="bg-gray-light min-h-screen">
 
+  <!-- Page Hero Bar -->
+  <div class="bg-deep-blue text-white py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <h1 class="font-montserrat text-3xl font-bold">Checkout</h1>
+      <p class="font-poppins text-gray-300 mt-1">Complete your order</p>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="grid lg:grid-cols-3 gap-8">
-      <!-- Checkout Form -->
+
+      <!-- Form -->
       <div class="lg:col-span-2">
         <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()" class="space-y-6">
-          <!-- Customer Information -->
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h2 class="font-montserrat text-xl font-semibold text-charcoal mb-4 flex items-center gap-2">
-              <span class="w-6 h-6 bg-teal-700 text-white rounded-full flex items-center justify-center text-sm">1</span>
+
+          <!-- Customer Info -->
+          <div class="bg-white rounded-2xl p-6 shadow-sm">
+            <h2 class="font-montserrat text-lg font-bold text-dark-navy mb-4 flex items-center gap-2">
+              <span class="w-7 h-7 bg-orange text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
               Customer Information
             </h2>
             <div class="grid md:grid-cols-2 gap-4">
               <div>
-                <label class="font-poppins text-sm text-charcoal block mb-1">Full Name *</label>
-                <input type="text" formControlName="fullName" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-coral focus:outline-none">
-                <p class="text-red-500 text-xs mt-1" *ngIf="checkoutForm.get('fullName')?.invalid && checkoutForm.get('fullName')?.touched">Name is required</p>
+                <label class="font-poppins text-sm font-medium text-dark-navy block mb-1">Full Name *</label>
+                <input type="text" formControlName="fullName" placeholder="Your full name"
+                       class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:border-orange focus:outline-none font-poppins text-sm">
+                <p class="text-red-500 text-xs mt-1 font-poppins" *ngIf="checkoutForm.get('fullName')?.invalid && checkoutForm.get('fullName')?.touched">Name is required</p>
               </div>
               <div>
-                <label class="font-poppins text-sm text-charcoal block mb-1">Phone Number *</label>
-                <input type="tel" formControlName="phone" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-coral focus:outline-none">
-                <p class="text-red-500 text-xs mt-1" *ngIf="checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched">Phone is required</p>
+                <label class="font-poppins text-sm font-medium text-dark-navy block mb-1">Phone Number *</label>
+                <input type="tel" formControlName="phone" placeholder="0912345678"
+                       class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:border-orange focus:outline-none font-poppins text-sm">
+                <p class="text-red-500 text-xs mt-1 font-poppins" *ngIf="checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched">Valid 10-digit phone required</p>
               </div>
               <div class="md:col-span-2">
-                <label class="font-poppins text-sm text-charcoal block mb-1">Email Address</label>
-                <input type="email" formControlName="email" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-coral focus:outline-none">
+                <label class="font-poppins text-sm font-medium text-dark-navy block mb-1">Email Address</label>
+                <input type="email" formControlName="email" placeholder="you@example.com"
+                       class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:border-orange focus:outline-none font-poppins text-sm">
               </div>
             </div>
           </div>
 
-          <!-- Delivery Information -->
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h2 class="font-montserrat text-xl font-semibold text-charcoal mb-4 flex items-center gap-2">
-              <span class="w-6 h-6 bg-teal-700 text-white rounded-full flex items-center justify-center text-sm">2</span>
+          <!-- Delivery Info -->
+          <div class="bg-white rounded-2xl p-6 shadow-sm">
+            <h2 class="font-montserrat text-lg font-bold text-dark-navy mb-4 flex items-center gap-2">
+              <span class="w-7 h-7 bg-orange text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
               Delivery Information
             </h2>
             <div class="space-y-4">
               <div>
-                <label class="font-poppins text-sm text-charcoal block mb-1">Delivery Address *</label>
-                <textarea formControlName="address" rows="2" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-coral focus:outline-none"></textarea>
-                <p class="text-red-500 text-xs mt-1" *ngIf="checkoutForm.get('address')?.invalid && checkoutForm.get('address')?.touched">Address is required</p>
+                <label class="font-poppins text-sm font-medium text-dark-navy block mb-1">Delivery Address *</label>
+                <textarea formControlName="address" rows="2" placeholder="Street, area, city..."
+                          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:border-orange focus:outline-none font-poppins text-sm resize-none"></textarea>
+                <p class="text-red-500 text-xs mt-1 font-poppins" *ngIf="checkoutForm.get('address')?.invalid && checkoutForm.get('address')?.touched">Address is required</p>
               </div>
               <div>
-                <label class="font-poppins text-sm text-charcoal block mb-1">Delivery Date *</label>
-                <input type="date" formControlName="deliveryDate" [min]="minDate" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-coral focus:outline-none">
+                <label class="font-poppins text-sm font-medium text-dark-navy block mb-1">Preferred Delivery Date *</label>
+                <input type="date" formControlName="deliveryDate" [min]="minDate"
+                       class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:border-orange focus:outline-none font-poppins text-sm">
               </div>
             </div>
           </div>
 
-          <!-- Payment Method -->
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h2 class="font-montserrat text-xl font-semibold text-charcoal mb-4 flex items-center gap-2">
-              <span class="w-6 h-6 bg-teal-700 text-white rounded-full flex items-center justify-center text-sm">3</span>
+          <!-- Payment -->
+          <div class="bg-white rounded-2xl p-6 shadow-sm">
+            <h2 class="font-montserrat text-lg font-bold text-dark-navy mb-4 flex items-center gap-2">
+              <span class="w-7 h-7 bg-orange text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
               Payment Method
             </h2>
             <div class="space-y-3">
-              <label *ngFor="let method of paymentMethods" class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer" [class.border-coral]="checkoutForm.get('paymentMethod')?.value === method.value" [class.bg-coral/5]="checkoutForm.get('paymentMethod')?.value === method.value">
-                <input type="radio" formControlName="paymentMethod" [value]="method.value" class="w-4 h-4 accent-coral">
-                <span class="text-xl">{{ method.icon }}</span>
-                <span class="font-poppins text-charcoal flex-1">{{ method.name }}</span>
-                <span class="text-xs text-gray-500">{{ method.description }}</span>
+              <label *ngFor="let method of paymentMethods"
+                     class="flex items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition"
+                     [class.border-orange]="checkoutForm.get('paymentMethod')?.value === method.value"
+                     [class.bg-orange/5]="checkoutForm.get('paymentMethod')?.value === method.value"
+                     [class.border-gray-200]="checkoutForm.get('paymentMethod')?.value !== method.value">
+                <input type="radio" formControlName="paymentMethod" [value]="method.value" class="w-4 h-4 accent-orange">
+                <span class="text-2xl">{{ method.icon }}</span>
+                <div class="flex-1">
+                  <p class="font-poppins font-semibold text-dark-navy text-sm">{{ method.name }}</p>
+                  <p class="font-poppins text-xs text-gray-500">{{ method.description }}</p>
+                </div>
               </label>
             </div>
           </div>
 
-          <!-- Order Summary -->
-          <div class="bg-teal-700 rounded-xl p-6 text-white">
-            <h2 class="font-montserrat text-xl font-semibold mb-4">Order Summary</h2>
-            <div class="space-y-2 pb-3 border-b border-white/20">
-              <div class="flex justify-between">
-                <span>Subtotal</span>
-                <span>{{ subtotal }} ETB</span>
-              </div>
-              <div class="flex justify-between">
-                <span>Delivery Fee</span>
-                <span>{{ deliveryFee }} ETB</span>
-              </div>
-            </div>
-            <div class="flex justify-between pt-3 font-bold text-lg">
-              <span>Total</span>
-              <span class="text-coral">{{ total }} ETB</span>
-            </div>
-          </div>
-
-          <!-- Order Error -->
-          <div *ngIf="orderError" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+          <!-- Error -->
+          <div *ngIf="orderError" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-2 font-poppins text-sm">
             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
             {{ orderError }}
           </div>
 
-          <!-- Submit Button -->
-          <button type="submit" [disabled]="checkoutForm.invalid || isProcessing" class="w-full bg-coral text-white py-3 rounded-full font-semibold text-lg hover:bg-opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed">
-            <span *ngIf="!isProcessing">Place Order • {{ total }} ETB</span>
-            <span *ngIf="isProcessing" class="flex items-center justify-center gap-2">
-              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Processing...
-            </span>
+          <!-- Submit -->
+          <button type="submit" [disabled]="checkoutForm.invalid || isProcessing"
+                  class="w-full bg-orange text-white py-4 rounded-full font-poppins font-bold text-lg hover:bg-opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+            <svg *ngIf="isProcessing" class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            {{ isProcessing ? 'Processing...' : 'Place Order • ' + total + ' ETB' }}
           </button>
         </form>
       </div>
 
-      <!-- Cart Items Preview -->
+      <!-- Order Summary -->
       <div class="lg:col-span-1">
-        <div class="bg-white rounded-xl p-6 shadow-sm sticky top-24">
-          <h2 class="font-montserrat text-xl font-semibold text-charcoal mb-4">Your Items</h2>
-          <div class="space-y-3 max-h-96 overflow-y-auto">
-            <div *ngFor="let item of cartItems" class="flex gap-3 pb-3 border-b">
-              <img [src]="item.image" class="w-12 h-12 rounded-lg object-cover">
-              <div class="flex-1">
-                <p class="font-poppins text-sm font-semibold text-charcoal">{{ item.name }}</p>
-                <p class="font-poppins text-xs text-gray-500">Qty: {{ item.quantity }}</p>
+        <div class="bg-white rounded-2xl p-6 shadow-sm sticky top-24">
+          <h2 class="font-montserrat text-lg font-bold text-dark-navy mb-4">Your Items</h2>
+          <div class="space-y-3 max-h-72 overflow-y-auto mb-4">
+            <div *ngFor="let item of cartItems" class="flex gap-3 pb-3 border-b border-gray-50 last:border-0">
+              <img [src]="item.image || 'https://placehold.co/48x48?text=?'" class="w-12 h-12 rounded-lg object-cover flex-shrink-0">
+              <div class="flex-1 min-w-0">
+                <p class="font-poppins text-sm font-semibold text-dark-navy truncate">{{ item.name }}</p>
+                <p class="font-poppins text-xs text-gray-400">Qty: {{ item.quantity }}</p>
               </div>
-              <span class="font-poppins text-sm font-medium text-teal-700">{{ item.price * item.quantity }} ETB</span>
+              <span class="font-poppins text-sm font-bold text-orange flex-shrink-0">{{ item.price * item.quantity }} ETB</span>
             </div>
           </div>
-          <div class="mt-4 pt-3 border-t">
-            <div class="flex justify-between font-bold">
-              <span>Total Items:</span>
-              <span>{{ cartCount }}</span>
+          <div class="border-t border-gray-100 pt-4 space-y-2">
+            <div class="flex justify-between font-poppins text-sm text-gray-500">
+              <span>Subtotal</span><span>{{ subtotal }} ETB</span>
+            </div>
+            <div class="flex justify-between font-poppins text-sm text-gray-500">
+              <span>Delivery</span><span>{{ deliveryFee }} ETB</span>
+            </div>
+            <div class="flex justify-between font-montserrat font-bold text-dark-navy pt-2 border-t border-gray-100">
+              <span>Total</span><span class="text-orange text-lg">{{ total }} ETB</span>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </main>

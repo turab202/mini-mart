@@ -1,67 +1,80 @@
 <app-navbar></app-navbar>
 
-<main class="bg-cream min-h-screen py-16">
-  <div class="max-w-2xl mx-auto px-4 text-center">
+<main class="bg-gray-light min-h-screen">
+
+  <!-- Page Hero Bar -->
+  <div class="bg-deep-blue text-white py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+      <h1 class="font-montserrat text-3xl font-bold">Order Confirmed!</h1>
+      <p class="font-poppins text-gray-300 mt-1">Thank you for shopping with Mini-Mart</p>
+    </div>
+  </div>
+
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 py-12">
+
     <!-- Success Icon -->
-    <div class="w-24 h-24 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center">
-      <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-      </svg>
+    <div class="flex justify-center mb-8">
+      <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center shadow-lg">
+        <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
     </div>
 
-    <h1 class="font-montserrat text-3xl font-bold text-charcoal mb-2">Order Confirmed!</h1>
-    <p class="font-poppins text-gray-600 mb-6">Thank you for shopping with Mini-Mart</p>
-
-    <!-- Order Details -->
-    <div class="bg-white rounded-xl p-6 shadow-sm text-left mb-6">
-      <div class="flex justify-between items-center pb-3 border-b">
-        <span class="font-poppins text-sm text-gray-500">Order ID</span>
-        <span class="font-montserrat font-semibold text-teal-700">{{ order?.orderId }}</span>
+    <!-- Order Details Card -->
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+      <div class="bg-orange/10 px-6 py-4 border-b border-orange/20">
+        <h2 class="font-montserrat font-bold text-dark-navy">Order Details</h2>
       </div>
-      <div class="flex justify-between items-center py-3 border-b">
-        <span class="font-poppins text-sm text-gray-500">Total Amount</span>
-        <span class="font-montserrat font-bold text-xl text-coral">{{ order?.total }} ETB</span>
-      </div>
-      <div class="flex justify-between items-center py-3 border-b">
-        <span class="font-poppins text-sm text-gray-500">Payment Method</span>
-        <span class="font-poppins capitalize">{{ order?.paymentMethod }}</span>
-      </div>
-      <div class="flex justify-between items-center py-3 border-b">
-        <span class="font-poppins text-sm text-gray-500">Delivery Date</span>
-        <span class="font-poppins">{{ order?.deliveryDate | date }}</span>
-      </div>
-      <div class="flex justify-between items-center pt-3">
-        <span class="font-poppins text-sm text-gray-500">Delivery Address</span>
-        <span class="font-poppins text-sm text-right max-w-[200px]">{{ order?.deliveryAddress }}</span>
+      <div class="divide-y divide-gray-50">
+        <div class="flex justify-between items-center px-6 py-4">
+          <span class="font-poppins text-sm text-gray-500">Order ID</span>
+          <span class="font-montserrat font-bold text-orange">{{ order?.orderId }}</span>
+        </div>
+        <div class="flex justify-between items-center px-6 py-4">
+          <span class="font-poppins text-sm text-gray-500">Total Amount</span>
+          <span class="font-montserrat font-bold text-xl text-dark-navy">{{ order?.total }} ETB</span>
+        </div>
+        <div class="flex justify-between items-center px-6 py-4">
+          <span class="font-poppins text-sm text-gray-500">Payment Method</span>
+          <span class="font-poppins font-medium text-dark-navy capitalize">{{ order?.paymentMethod }}</span>
+        </div>
+        <div class="flex justify-between items-center px-6 py-4">
+          <span class="font-poppins text-sm text-gray-500">Delivery Date</span>
+          <span class="font-poppins font-medium text-dark-navy">{{ order?.deliveryDate | date:'mediumDate' }}</span>
+        </div>
+        <div class="flex justify-between items-start px-6 py-4">
+          <span class="font-poppins text-sm text-gray-500">Delivery Address</span>
+          <span class="font-poppins text-sm text-dark-navy text-right max-w-[200px]">{{ order?.deliveryAddress }}</span>
+        </div>
       </div>
     </div>
 
     <!-- Payment Instructions -->
-    <div *ngIf="order?.paymentMethod !== 'chapa'" class="bg-coral/10 rounded-xl p-4 text-left mb-6">
-      <h3 class="font-montserrat font-semibold text-charcoal mb-2 flex items-center gap-2">
-        <span>📱</span> Payment Instructions
+    <div *ngIf="order?.paymentMethod !== 'chapa'" class="bg-white rounded-2xl shadow-sm p-6 mb-6 border-l-4 border-orange">
+      <h3 class="font-montserrat font-bold text-dark-navy mb-3 flex items-center gap-2">
+        <span class="text-xl">📱</span> Payment Instructions
       </h3>
-      <p class="font-poppins text-sm text-gray-700">
-        Please send <strong class="text-coral">{{ order?.total }} ETB</strong> to:
+      <p class="font-poppins text-sm text-gray-600 mb-3">
+        Please send <strong class="text-orange">{{ order?.total }} ETB</strong> to complete your order:
       </p>
-      <div class="mt-2 p-2 bg-white rounded-lg">
-        <p class="font-poppins text-sm"><strong>Telegram:</strong> @minimart_payments</p>
-        <p class="font-poppins text-sm"><strong>Phone:</strong> +251 900 123 456</p>
+      <div class="bg-gray-light rounded-xl p-4 space-y-1">
+        <p class="font-poppins text-sm text-dark-navy"><strong>Telegram:</strong> &#64;minimart_payments</p>
+        <p class="font-poppins text-sm text-dark-navy"><strong>Phone:</strong> +251 900 123 456</p>
       </div>
-      <p class="font-poppins text-xs text-gray-500 mt-2">
-        After payment, upload your receipt in the orders section.
-      </p>
+      <p class="font-poppins text-xs text-gray-400 mt-3">After payment, send your receipt screenshot to confirm your order.</p>
     </div>
 
     <!-- Action Buttons -->
-    <div class="flex flex-wrap gap-4 justify-center">
-      <button routerLink="/products" class="bg-teal-700 text-white px-6 py-2 rounded-full font-medium hover:bg-teal-800 transition">
+    <div class="flex flex-col sm:flex-row gap-4">
+      <a routerLink="/products" class="flex-1 bg-orange text-white py-3 rounded-full font-poppins font-semibold text-center hover:bg-opacity-90 transition">
         Continue Shopping
-      </button>
-      <button routerLink="/" class="border border-coral text-coral px-6 py-2 rounded-full font-medium hover:bg-coral hover:text-white transition">
+      </a>
+      <a routerLink="/" class="flex-1 bg-white text-dark-navy py-3 rounded-full font-poppins font-semibold text-center border-2 border-gray-200 hover:border-orange hover:text-orange transition">
         Back to Home
-      </button>
+      </a>
     </div>
+
   </div>
 </main>
 

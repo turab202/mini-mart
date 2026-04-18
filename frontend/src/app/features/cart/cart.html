@@ -1,64 +1,82 @@
 <app-navbar></app-navbar>
 
-<main class="bg-cream min-h-screen py-16">
-  <div class="max-w-6xl mx-auto px-4">
-    <h1 class="font-montserrat text-3xl font-bold text-charcoal mb-8">Your Cart</h1>
+<main class="bg-gray-light min-h-screen">
 
-    <div *ngIf="cartItems.length === 0" class="text-center py-16">
-      <div class="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
-        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <!-- Page Hero Bar -->
+  <div class="bg-deep-blue text-white py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <h1 class="font-montserrat text-3xl font-bold">Your Cart</h1>
+      <p class="font-poppins text-gray-300 mt-1">{{ cartItems.length }} item(s) in your cart</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+
+    <!-- Empty Cart -->
+    <div *ngIf="cartItems.length === 0" class="text-center py-20">
+      <div class="w-24 h-24 mx-auto bg-white rounded-full flex items-center justify-center shadow mb-5">
+        <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6M17 13l1.5 6M9 21h6M12 18v3"/>
         </svg>
       </div>
-      <h2 class="font-montserrat text-xl text-charcoal mb-2">Your cart is empty</h2>
-      <button routerLink="/products" class="bg-coral text-white px-6 py-2 rounded-full mt-4">Continue Shopping</button>
+      <h2 class="font-montserrat text-2xl font-bold text-dark-navy mb-2">Your cart is empty</h2>
+      <p class="font-poppins text-gray-500 mb-6">Add some products to get started!</p>
+      <a routerLink="/products" class="bg-orange text-white px-8 py-3 rounded-full font-poppins font-semibold hover:bg-opacity-90 transition">Browse Products</a>
     </div>
 
+    <!-- Cart Content -->
     <div *ngIf="cartItems.length > 0" class="grid lg:grid-cols-3 gap-8">
-      <!-- Cart Items -->
+
+      <!-- Items -->
       <div class="lg:col-span-2 space-y-4">
-        <div *ngFor="let item of cartItems" class="bg-white rounded-xl p-4 flex gap-4 shadow-sm">
-          <img [src]="item.image" class="w-20 h-20 rounded-lg object-cover">
-          <div class="flex-1">
-            <div class="flex justify-between">
-              <h3 class="font-montserrat font-semibold text-charcoal">{{ item.name }}</h3>
-              <button (click)="removeItem(item.productId)" class="text-red-500 hover:text-red-700">
+        <div *ngFor="let item of cartItems" class="bg-white rounded-2xl p-4 flex gap-4 shadow-sm hover:shadow-md transition">
+          <img [src]="item.image || 'https://placehold.co/80x80?text=?'" class="w-20 h-20 rounded-xl object-cover flex-shrink-0" alt="{{ item.name }}">
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-start gap-2">
+              <h3 class="font-montserrat font-semibold text-dark-navy truncate">{{ item.name }}</h3>
+              <button (click)="removeItem(item.productId)" class="text-gray-300 hover:text-red-500 transition flex-shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
               </button>
             </div>
-            <p class="font-poppins text-teal-600 font-bold mt-2">{{ item.price }} ETB</p>
+            <p class="font-poppins font-bold text-orange mt-1">{{ item.price }} ETB</p>
             <div class="flex items-center gap-2 mt-2">
-              <button (click)="updateQuantity(item.productId, item.quantity - 1)" class="w-8 h-8 border rounded-lg">-</button>
-              <span class="w-8 text-center">{{ item.quantity }}</span>
-              <button (click)="updateQuantity(item.productId, item.quantity + 1)" class="w-8 h-8 border rounded-lg">+</button>
+              <button (click)="updateQuantity(item.productId, item.quantity - 1)"
+                      class="w-8 h-8 border-2 border-gray-200 rounded-lg flex items-center justify-center hover:border-orange transition font-bold text-dark-navy">−</button>
+              <span class="w-8 text-center font-poppins font-semibold text-dark-navy">{{ item.quantity }}</span>
+              <button (click)="updateQuantity(item.productId, item.quantity + 1)"
+                      class="w-8 h-8 border-2 border-gray-200 rounded-lg flex items-center justify-center hover:border-orange transition font-bold text-dark-navy">+</button>
+              <span class="font-poppins text-sm text-gray-400 ml-2">= {{ item.price * item.quantity }} ETB</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Order Summary -->
+      <!-- Summary -->
       <div class="lg:col-span-1">
-        <div class="bg-white rounded-xl p-6 shadow-sm sticky top-24">
-          <h2 class="font-montserrat text-xl font-semibold text-charcoal mb-4">Order Summary</h2>
-          <div class="space-y-2 pb-4 border-b">
-            <div class="flex justify-between">
+        <div class="bg-white rounded-2xl p-6 shadow-sm sticky top-24">
+          <h2 class="font-montserrat text-xl font-bold text-dark-navy mb-5">Order Summary</h2>
+          <div class="space-y-3 pb-4 border-b border-gray-100">
+            <div class="flex justify-between font-poppins text-sm text-gray-600">
               <span>Subtotal</span>
               <span>{{ subtotal }} ETB</span>
             </div>
-            <div class="flex justify-between">
+            <div class="flex justify-between font-poppins text-sm text-gray-600">
               <span>Delivery Fee</span>
               <span>150 ETB</span>
             </div>
           </div>
-          <div class="flex justify-between pt-4 font-bold text-lg">
-            <span>Total</span>
-            <span class="text-coral">{{ total }} ETB</span>
+          <div class="flex justify-between pt-4 mb-6">
+            <span class="font-montserrat font-bold text-dark-navy">Total</span>
+            <span class="font-montserrat font-bold text-xl text-orange">{{ total }} ETB</span>
           </div>
-          <button routerLink="/checkout" class="w-full bg-coral text-white py-3 rounded-full font-semibold mt-6 hover:bg-opacity-90 transition">
-            Proceed to Checkout
-          </button>
+          <a routerLink="/checkout" class="block w-full bg-orange text-white py-3 rounded-full font-poppins font-semibold text-center hover:bg-opacity-90 transition">
+            Proceed to Checkout →
+          </a>
+          <a routerLink="/products" class="block w-full text-center font-poppins text-sm text-gray-500 hover:text-orange transition mt-3">
+            ← Continue Shopping
+          </a>
         </div>
       </div>
     </div>
