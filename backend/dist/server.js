@@ -75,9 +75,13 @@ app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, '../
 // Health check
 app.get('/health', (req, res) => {
     const dbState = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+    const uri = process.env.MONGODB_URI || '';
+    // Show full URI with password masked for debugging
+    const maskedUri = uri.replace(/:([^@]+)@/, ':****@');
     res.json({
         status: 'ok',
         db: dbState[mongoose_1.default.connection.readyState],
+        uri: maskedUri,
         env: {
             hasMongoUri: !!process.env.MONGODB_URI,
             hasJwtSecret: !!process.env.JWT_SECRET,
