@@ -17,7 +17,8 @@ export const getProducts = async (req: Request, res: Response) => {
     const total = await Product.countDocuments(query);
     res.json({ products, total, page: Number(page), totalPages: Math.ceil(total / Number(limit)) });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('getProducts error:', error);
+    res.status(500).json({ message: 'Server error', detail: String(error) });
   }
 };
 

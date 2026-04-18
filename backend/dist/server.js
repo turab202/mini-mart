@@ -16,7 +16,15 @@ const products_1 = __importDefault(require("./routes/products"));
 const orders_1 = __importDefault(require("./routes/orders"));
 const cart_1 = __importDefault(require("./routes/cart"));
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: [
+        'http://localhost:4200',
+        /\.onrender\.com$/,
+        /\.netlify\.app$/,
+        /\.vercel\.app$/
+    ],
+    credentials: true
+}));
 app.use(express_1.default.json());
 // Create uploads directory if it doesn't exist
 const uploadDir = './uploads';
@@ -54,8 +62,8 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
         if (!req.file) {
             return res.status(400).json({ message: 'No file uploaded' });
         }
-        // ⚠️ Optional improvement: use env URL later for production
-        const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+        const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+        const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
         res.json({ imageUrl });
     }
     catch (error) {
@@ -64,6 +72,19 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 });
 // Serve uploaded files statically
 app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, '../uploads')));
+// Health check
+app.get('/health', (req, res) => {
+    const dbState = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+    res.json({
+        status: 'ok',
+        db: dbState[mongoose_1.default.connection.readyState],
+        env: {
+            hasMongoUri: !!process.env.MONGODB_URI,
+            hasJwtSecret: !!process.env.JWT_SECRET,
+            port: process.env.PORT || 5000
+        }
+    });
+});
 // API Routes
 app.use('/api/auth', auth_1.default);
 app.use('/api/products', products_1.default);
