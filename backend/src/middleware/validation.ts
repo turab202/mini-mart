@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { body, validationResult } from 'express-validator';
+import validator from 'express-validator';
 
+const { body, validationResult } = validator;
 
 // Validation rules for user registration
 export const validateRegister = [
