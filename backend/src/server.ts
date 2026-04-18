@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import multer from 'multer';
@@ -15,6 +15,11 @@ import cartRoutes from './routes/cart';
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// ✅ FIX: Extend Request type for multer
+interface MulterRequest extends Request {
+  file?: Express.Multer.File;
+}
 
 // Create uploads directory if it doesn't exist
 const uploadDir = './uploads';
@@ -49,12 +54,15 @@ const upload = multer({
 });
 
 // Upload endpoint
-app.post('/api/upload', upload.single('image'), (req, res) => {
+app.post('/api/upload', upload.single('image'), (req: MulterRequest, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
+
+    // ⚠️ Optional improvement: use env URL later for production
     const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+
     res.json({ imageUrl });
   } catch (error) {
     res.status(500).json({ message: 'Upload failed' });
