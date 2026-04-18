@@ -13,7 +13,15 @@ import orderRoutes from './routes/orders';
 import cartRoutes from './routes/cart';
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:4200',
+    /\.onrender\.com$/,
+    /\.netlify\.app$/,
+    /\.vercel\.app$/
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // ✅ FIX: Extend Request type for multer
@@ -60,8 +68,8 @@ app.post('/api/upload', upload.single('image'), (req: MulterRequest, res) => {
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
-    // ⚠️ Optional improvement: use env URL later for production
-    const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+    const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+    const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
 
     res.json({ imageUrl });
   } catch (error) {

@@ -30,8 +30,8 @@ import { FooterComponent } from '../../shared/footer/footer';
           </button>
         </div>
         <div class="absolute bottom-0 left-0 w-full">
-          <svg viewBox="0 0 1440 120" class="w-full h-16">
-            <path fill="#F8F9FA" d="M0,80 C120,100 240,120 360,110 C480,100 600,60 720,50 C840,40 960,60 1080,75 C1200,90 1320,100 1440,90 L1440,120 L0,120 Z"/>
+          <svg viewBox="0 0 1440 48" class="w-full h-8 sm:h-12" preserveAspectRatio="none">
+            <path fill="#F8F9FA" d="M0,32 C120,48 240,0 360,16 C480,32 600,48 720,40 C840,32 960,8 1080,20 C1200,32 1320,44 1440,32 L1440,48 L0,48 Z"/>
           </svg>
         </div>
       </section>

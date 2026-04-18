@@ -21,6 +21,7 @@ import { FooterComponent } from '../../shared/footer/footer';
             We'd love to hear from you. Get in touch with our team
           </p>
         </div>
+        
       </section>
 
       <!-- Contact Section -->

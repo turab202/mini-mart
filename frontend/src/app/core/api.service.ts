@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private baseUrl = 'http://localhost:5000/api';
+  private baseUrl = 'https://mini-mart-1-j6s3.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 

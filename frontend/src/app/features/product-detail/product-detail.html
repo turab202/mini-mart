@@ -3,8 +3,8 @@
 <main class="bg-gray-light min-h-screen">
 
   <!-- Page Hero Bar -->
-  <div class="bg-deep-blue text-white py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="bg-deep-blue text-white relative overflow-hidden pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10">
       <div class="flex items-center gap-2 text-sm font-poppins">
         <a routerLink="/" class="text-gray-300 hover:text-orange transition">Home</a>
         <span class="text-gray-500">/</span>
@@ -12,7 +12,12 @@
         <span class="text-gray-500">/</span>
         <span class="text-orange">{{ product?.name || 'Product Detail' }}</span>
       </div>
-      <h1 class="font-montserrat text-2xl font-bold mt-2">{{ product?.name || 'Product Detail' }}</h1>
+      <h1 class="font-montserrat text-2xl sm:text-3xl font-bold mt-2">{{ product?.name || 'Product Detail' }}</h1>
+    </div>
+    <div class="absolute bottom-0 left-0 w-full">
+      <svg viewBox="0 0 1440 48" class="w-full h-8 sm:h-12" preserveAspectRatio="none">
+        <path fill="#F8F9FA" d="M0,32 C120,48 240,0 360,16 C480,32 600,48 720,40 C840,32 960,8 1080,20 C1200,32 1320,44 1440,32 L1440,48 L0,48 Z"/>
+      </svg>
     </div>
   </div>
 

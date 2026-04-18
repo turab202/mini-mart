@@ -18,6 +18,7 @@ import { FooterComponent } from '../../shared/footer/footer';
             Your trusted online shopping destination for quality products at amazing prices
           </p>
         </div>
+        
       </section>
 
       <!-- Mission & Vision -->
