@@ -96,24 +96,24 @@ app.use('/api/orders', orders_1.default);
 app.use('/api/cart', cart_1.default);
 // CONNECT DB + START SERVER
 const startServer = async () => {
-    app.listen(process.env.PORT || 5000, () => {
-        console.log(`Server running on port ${process.env.PORT || 5000} 🚀`);
-    });
     try {
         const uri = process.env.MONGODB_URI;
         if (!uri) {
-            console.error('MONGODB_URI is not set!');
-            return;
+            throw new Error('MONGODB_URI is not set!');
         }
-        console.log('Connecting to MongoDB, URI prefix:', uri.substring(0, 30));
+        console.log('Connecting to MongoDB...');
         await mongoose_1.default.connect(uri, {
             serverSelectionTimeoutMS: 15000,
             socketTimeoutMS: 45000,
         });
         console.log('MongoDB Connected ✅');
+        app.listen(process.env.PORT || 5000, () => {
+            console.log(`Server running on port ${process.env.PORT || 5000} 🚀`);
+        });
     }
     catch (error) {
-        console.error('MongoDB connection error:', error?.message);
+        console.error('MongoDB connection error:', error.message);
+        process.exit(1); // 🔥 IMPORTANT for Render debugging
     }
 };
 startServer();

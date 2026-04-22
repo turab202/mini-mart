@@ -1,6 +1,9 @@
 {
   "name": "mini-mart-backend",
   "version": "1.0.0",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "dev": "nodemon --exec ts-node --transpile-only src/server.ts",
     "build": "tsc",
