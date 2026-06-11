@@ -103,20 +103,10 @@ app.get('/health', (req, res) => {
 // ==============================================
 app.post('/api/admin/seed', async (req, res) => {
   try {
-    // Define Product schema inline for seeding
-    const productSchema = new mongoose.Schema({
-      name: String,
-      description: String,
-      price: Number,
-      category: String,
-      stock: Number,
-      isFeatured: Boolean,
-      images: [String],
-      createdAt: { type: Date, default: Date.now }
-    });
+    // IMPORTANT: Use the existing Product model (already compiled by productRoutes)
+    // This prevents the "OverwriteModelError" error
+    const Product = mongoose.model('Product');
     
-    const Product = mongoose.model('Product', productSchema);
-
     // Your 20 products data
     const products = [
       { name: "Sony WH-1000XM5 Wireless Headphones", description: "Industry-leading noise cancellation with exceptional sound quality. 30-hour battery life and comfortable design.", price: 24999, category: "Electronics", stock: 15, isFeatured: true, images: ["https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400"] },
@@ -141,12 +131,9 @@ app.post('/api/admin/seed', async (req, res) => {
       { name: "Neutrogena Sunscreen SPF 50", description: "Broad spectrum sunscreen with helioplex technology.", price: 1299, category: "Beauty", stock: 150, isFeatured: false, images: ["https://images.unsplash.com/photo-1556229174-5e42a9e4f81f?w=400"] }
     ];
 
-    // Check if products already exist
-    const existingProducts = await Product.countDocuments();
-    if (existingProducts > 0) {
-      console.log(`⚠️  Found ${existingProducts} existing products. Deleting them...`);
-      await Product.deleteMany({});
-    }
+    // Clear existing products
+    const deleted = await Product.deleteMany({});
+    console.log(`🗑️ Deleted ${deleted.deletedCount} existing products`);
 
     // Insert new products
     const inserted = await Product.insertMany(products);
@@ -156,11 +143,18 @@ app.post('/api/admin/seed', async (req, res) => {
     res.json({ 
       success: true, 
       message: `Successfully seeded ${inserted.length} products!`,
-      products: inserted.map(p => ({ name: p.name, category: p.category, price: p.price }))
+      count: inserted.length,
+      products: inserted.map(p => ({ 
+        id: p._id,
+        name: p.name, 
+        category: p.category, 
+        price: p.price,
+        stock: p.stock
+      }))
     });
     
   } catch (error: any) {
-    console.error('Seed error:', error);
+    console.error('❌ Seed error:', error.message);
     res.status(500).json({ 
       success: false, 
       error: error.message 
