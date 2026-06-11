@@ -161,8 +161,105 @@ app.post('/api/admin/seed', async (req, res) => {
     });
   }
 });
+
 // ==============================================
-// END OF SEED ENDPOINT
+// TEMPORARY ADMIN ROLE UPDATE ENDPOINT
+// ==============================================
+app.post('/api/admin/set-role', async (req, res) => {
+  try {
+    const { email, role } = req.body;
+    
+    // Validate inputs
+    if (!email) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Email is required' 
+      });
+    }
+    
+    if (!role || !['admin', 'user'].includes(role)) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Role must be either "admin" or "user"' 
+      });
+    }
+    
+    // Get the User model (assuming you have one from auth routes)
+    const User = mongoose.model('User');
+    
+    // Update user role
+    const result = await User.updateOne(
+      { email: email },
+      { $set: { role: role } }
+    );
+    
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ 
+        success: false, 
+        error: `User with email ${email} not found` 
+      });
+    }
+    
+    if (result.modifiedCount > 0) {
+      console.log(`✅ Updated ${email} to role: ${role}`);
+      res.json({ 
+        success: true, 
+        message: `Successfully updated ${email} to ${role} role`,
+        email: email,
+        role: role
+      });
+    } else {
+      res.json({ 
+        success: true, 
+        message: `User ${email} already has ${role} role`,
+        email: email,
+        role: role
+      });
+    }
+    
+  } catch (error: any) {
+    console.error('❌ Role update error:', error.message);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
+});
+
+// ==============================================
+// GET USER INFO ENDPOINT (to check roles)
+// ==============================================
+app.get('/api/admin/user/:email', async (req, res) => {
+  try {
+    const User = mongoose.model('User');
+    const user = await User.findOne({ email: req.params.email });
+    
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'User not found' 
+      });
+    }
+    
+    res.json({
+      success: true,
+      user: {
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        phone: user.phone
+      }
+    });
+    
+  } catch (error: any) {
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
+});
+// ==============================================
+// END OF ADMIN ENDPOINTS
 // ==============================================
 
 // API Routes
